@@ -4,6 +4,7 @@ require("dotenv-safe").config();
 var jwt = require('jsonwebtoken');
 const User = require('../model/user');
     const Status = require('http-status');
+const e = require('express');
 
 
 
@@ -40,23 +41,51 @@ const User = require('../model/user');
           if (user && user.length) {
               response.send(user)
           } else {
-              response.status(Status.NOT_FOUND).send()
+              response.status(400).send('error')
           }
       }).catch((error) => next(error))
   }
   
-  exports.login = (req, res, next) => {
-     
-    if(req.body.email && req.body.senha){
-        //auth ok
-        const id = 1; //esse id viria do banco de dados
-        var token = jwt.sign({ id }, process.env.SECRET, {
-          expiresIn: 300 // expires in 5min
+  exports.login = async (req, res, next) => {
+      const email = req.body.email;
+      const senha = req.body.senha;
+      const cnpj = req.body.cnpj;
+      if(email){
+     const user = await User.findAll({where:{ 
+          email: email,
+          senha: senha
+      }}).then((user) => {
+        if (user[0]) {
+            const id = 1; //esse id viria do banco de dados
+            var token = jwt.sign({ id }, process.env.SECRET, {
+            expiresIn: 300 // expires in 5min
         });
         return res.json({ auth: true, token: token });
-      }
-      
-      res.status(500).json({message: 'Login inválido!'});
+        } 
+
+        res.status(500).json({message: 'Login inválido!', user: user[0]});
+    });
+
+      return res.send('finalizou', user);
+}
+if(cnpj){
+    const user = await User.findAll({where:{ 
+         cnpj: cnpj,
+         senha: senha
+     }}).then((user) => {
+       if (user[0]) {
+           const id = 1; //esse id viria do banco de dados
+           var token = jwt.sign({ id }, process.env.SECRET, {
+           expiresIn: 300 // expires in 5min
+       });
+       return res.json({ auth: true, token: token });
+       } 
+
+       res.status(500).json({message: 'Login inválido!', user: user[0]});
+   });
+
+     return res.send('finalizou', user);
+}
 
 }
 
