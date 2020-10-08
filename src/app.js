@@ -2,10 +2,11 @@
 const http = require("http");
 const status = require("http-status");
 const express = require("express");
-const kudoRoutes = require('./routes/kudo');
+const routes = require('./routes/routes');
 const sequelize = require('./database/database');
 const swaggerJsDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
+
 
 /* Instanciando o express */
 const app = express();
@@ -33,34 +34,10 @@ const swaggerOptions = {
   const swaggerDocs = swaggerJsDoc(swaggerOptions);
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
   
-  // Routes
-/**
- * @swagger
- * resourcePath: /api
- * description: All about API
- */
-
-/**
-* @swagger
-*      /customers:
-*        get:
-*          description: "Returns current weather in the specified city to the caller"
-*          operationId: getWeatherByCity
-*          parameters:
-*            - name: city
-*              in: query
-*              description: "The city you want weather for in the form city,stls
-ate,country"
-*              required: true
-*              type: "string"
-*/
-app.get('/customers', (req,resp) =>{
-    resp.send('customer result');
-});
 
 
 /* Definição de rotas */
-app.use('/api', kudoRoutes);
+app.use('/api/v1', routes);
 
 /* Middleware */
 app.use((request, response,next) => {

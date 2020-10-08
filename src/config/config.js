@@ -3,7 +3,7 @@ module.exports = {
       database: {
         host: "localhost",
         port: 3306,
-        name: "kudo_app",
+        name: "node_express_challenge",
         dialect: "mysql",
         user: "root",
         password: ""

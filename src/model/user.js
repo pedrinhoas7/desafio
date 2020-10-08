@@ -2,36 +2,38 @@
 const Sequelize = require("sequelize");
 const sequelize = require('../database/database');
 
-/* Definindo o model kudo */
-const kudo = sequelize.define('Kudo', {
+/* Definindo o model user */
+const User = sequelize.define('User', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      title: {
+      nome: {
         allowNull: false,
         type: Sequelize.STRING(255),
         validate: {
           len: [2, 255]
         }
       },
-      sender: {
+      email: {
         allowNull: false,
+        unique: true,
         type: Sequelize.STRING(40),
         validate: {
           len: [2, 40]
         }
       },
-      description: {
+      cnpj: {
         allowNull: false,
+        unique: true,
         type: Sequelize.STRING(255),
         validate: {
           len: [2, 255]
         }
       },
-      icon: {
+      senha: {
         allowNull: false,
         type: Sequelize.STRING(255),
         validate: {
@@ -40,4 +42,4 @@ const kudo = sequelize.define('Kudo', {
       }
 });
 
-module.exports = kudo;
+module.exports = User;

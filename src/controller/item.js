@@ -1,17 +1,17 @@
 /* Importando */
-const swagger = require('swagger-ui-express')
-const Kudo = require('../model/kudo');
+const swagger = require('swagger-ui-express');
+const Item = require('../model/item');
     const Status = require('http-status');
 
 
 
 /* Methodo get id */
   exports.getId = (request, response, next) => {
-      const id = request.params.id
-      Kudo.findByPk(id).then((kudo) => {
+      const id = request.params.itemId
+      Item.findByPk(id).then((item) => {
       
-        if (kudo) {
-            response.send(kudo)
+        if (item) {
+            response.send(item)
         } else {
             response.status(Status.NOT_FOUND).send()
         }
@@ -34,47 +34,47 @@ const Kudo = require('../model/kudo');
       limite = limite > ITENS_POR_PAGINA || limite <= 0 ? ITENS_POR_PAGINA : limite
       pagina = pagina <= 0 ? 0 : pagina * limite
 
-      Kudo.findAll({ limit: limite, offset: pagina }).then((kudo) => {
-          if (kudo && kudo.length) {
-              response.send(kudo)
+      Item.findAll({ limit: limite, offset: pagina }).then((item) => {
+          if (item && item.length) {
+              response.send(item)
           } else {
               response.status(Status.NOT_FOUND).send()
           }
       }).catch((error) => next(error))
   }
+  
+
 
   exports.create = (request, response, next) => {
-      const title = request.body.title
-      const sender = request.body.sender
-      const description = request.body.description
-      const icon = request.body.icon
+      const nome = request.body.nome
+      const descricao = request.body.descricao
+      const preco = request.body.preco
 
 
-      Kudo.create({
-          title: title,
-          sender: sender,
-          description: description,
-          icon: icon
+      Item.create({
+          nome: nome,
+          descricao: descricao,
+          preco: preco
       }).then(() => {
-          response.status(Status.CREATED).send("Kudo enviado com Sucesso !")
+          response.status(Status.CREATED).send("Item cadastrado com Sucesso !")
       }).catch((error) => next(error))
   }
 
   exports.update = (request, response, next) => {
-      const id = request.params.id
+      const id = request.params.itemId
 
-      const title = request.body.title
-      const sender = request.body.sender
-      const description = request.body.description
+      const nome = request.body.nome
+      const descricao = request.body.descricao
+      const preco = request.body.preco
 
-      Kudo.findByPk(id).then((kudo) => {
-          if (kudo) {
-              Kudo.update({
-                  title: title,
-                  sender: sender,
-                  description: description
+      Item.findByPk(id).then((item) => {
+          if (item) {
+              Item.update({
+                  nome: nome,
+                  descricao: descricao,
+                  preco: preco
               }, { where: { id: id } }).then(() => {
-                  response.send("Kudo atualizado com Sucesso !")
+                  response.send("Item atualizado com Sucesso !")
               }).catch((error) => next(error))
           } else {
               response.status(Status.NOT_FOUND).send()
@@ -83,14 +83,14 @@ const Kudo = require('../model/kudo');
   }
 
   exports.delete = (request, response, next) => {
-      const id = request.params.id
+      const id = request.params.itemId
 
-      Kudo.findByPk(id).then((kudo) => {
-          if (kudo) {
-              Kudo.destroy({
+      Item.findByPk(id).then((item) => {
+          if (item) {
+              Item.destroy({
                   where: { id: id }
               }).then(() => {
-                  response.send("Kudo deletado com sucesso !")
+                  response.send("item deletado com sucesso !")
               }).catch((error) => next(error))
           } else {
               response.status(Status.NOT_FOUND).send()
